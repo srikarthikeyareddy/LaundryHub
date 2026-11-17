@@ -8,6 +8,7 @@ interface AuthContextType {
   currentUser: Student | Staff | null;
   role: UserRole;
   loginAsStudent: (studentId: string) => void;
+  loginStudent: (registrationNumber: string, password: string) => Promise<void>;
   loginAsStaff: (staffId: string) => void;
   logout: () => void;
   switchRole: (newRole: UserRole) => void;
@@ -44,22 +45,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // Verify if parsed user exists in backend list
             if (savedRole === 'STUDENT') {
               const matched = students.find((s) => s.studentId === parsed.studentId);
-              setCurrentUser(matched || students[0] || null);
+              setCurrentUser(matched || null);
             } else {
               const matched = staff.find((st) => st.id === parsed.id || st.name === parsed.name);
-              setCurrentUser(matched || staff[0] || null);
+              setCurrentUser(matched || null);
             }
             setRole(savedRole);
           } catch {
-            if (students.length > 0) {
-              setCurrentUser(students[0]);
-              setRole('STUDENT');
-            }
+            localStorage.removeItem('hlms_user');
+            localStorage.removeItem('hlms_role');
           }
-        } else if (students.length > 0) {
-          setCurrentUser(students[0]);
-          setRole('STUDENT');
         }
+
       } catch (err) {
         console.error('Failed to load users from backend:', err);
       } finally {
@@ -102,13 +99,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const loginStudent = async (registrationNumber: string, password: string) => {
+    const student = await api.loginStudent(registrationNumber, password);
+    setCurrentUser(student);
+    setRole('STUDENT');
+    localStorage.setItem('hlms_user', JSON.stringify(student));
+    localStorage.setItem('hlms_role', 'STUDENT');
+  };
+
   const logout = () => {
     localStorage.removeItem('hlms_user');
     localStorage.removeItem('hlms_role');
-    if (demoStudents.length > 0) {
-      setCurrentUser(demoStudents[0]);
-      setRole('STUDENT');
-    }
+    setCurrentUser(null);
+    setRole('STUDENT');
   };
 
   return (
@@ -117,6 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         currentUser,
         role,
         loginAsStudent,
+        loginStudent,
         loginAsStaff,
         logout,
         switchRole,

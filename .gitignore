@@ -27,7 +27,9 @@ backend/*.war
 # IDE & Editor files
 .idea/
 *.iml
-.vscode/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/extensions.json
 *.swp
 *.swo
 *~
@@ -53,3 +55,8 @@ frontend/.env.production.local
 
 # Vercel
 .vercel
+
+# Local database files and secrets
+*.env
+*.pem
+*.key

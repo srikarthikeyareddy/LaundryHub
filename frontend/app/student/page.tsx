@@ -28,6 +28,7 @@ export default function StudentDashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!student?.studentId) { setOrders([]); return; }
     async function loadData() {
       try {
         setLoading(true);

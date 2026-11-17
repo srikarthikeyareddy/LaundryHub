@@ -35,6 +35,7 @@ export default function MyOrdersPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!student?.studentId) { setOrders([]); return; }
     async function fetchOrders() {
       try {
         setLoading(true);

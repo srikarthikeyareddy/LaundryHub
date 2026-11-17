@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -25,9 +25,13 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { currentUser, role, logout, switchRole, demoStudents, demoStaff, loginAsStudent, loginAsStaff } = useAuth();
+  const { currentUser, role, loadingUsers, logout, switchRole, demoStudents, demoStaff, loginAsStudent, loginAsStaff } = useAuth();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
+
+  useEffect(() => {
+    if (!loadingUsers && !currentUser) router.replace('/login');
+  }, [loadingUsers, currentUser, router]);
 
   const isStaff = role === 'STAFF';
 
@@ -62,6 +66,10 @@ export function AppLayout({ children }: AppLayoutProps) {
         .substring(0, 2)
         .toUpperCase()
     : 'HL';
+
+  if (loadingUsers || !currentUser) {
+    return <div role="status" className="min-h-screen grid place-items-center bg-slate-50 text-slate-500">Loading your account…</div>;
+  }
 
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-900">

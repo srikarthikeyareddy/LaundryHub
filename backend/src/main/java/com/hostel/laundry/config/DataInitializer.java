@@ -53,6 +53,12 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("Initialized project group students in MySQL: STU001-STU004");
         }
 
+        // Personal demo account. Unprovided profile fields remain explicitly unset.
+        if (!studentRepository.existsByStudentId("RA2311003011798")) {
+            studentRepository.save(new Student("RA2311003011798", "Sri Karthikeya",
+                    "Not provided", "Not set", "Not set"));
+        }
+
         // 3. Seed Staff if empty
         if (staffRepository.count() == 0) {
             Staff st1 = new Staff("Ramesh Kumar", "9876543220", "Laundry Supervisor");

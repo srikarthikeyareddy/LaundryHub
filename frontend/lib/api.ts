@@ -45,6 +45,11 @@ async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  async loginStudent(registrationNumber: string, password: string): Promise<Student> {
+    return request<Student>('/auth/student-login', {
+      method: 'POST', body: JSON.stringify({ registrationNumber, password }),
+    });
+  },
   // Laundry rates from Java Backend & MySQL
   async getPrices(): Promise<LaundryPrice[]> {
     return request<LaundryPrice[]>('/prices');

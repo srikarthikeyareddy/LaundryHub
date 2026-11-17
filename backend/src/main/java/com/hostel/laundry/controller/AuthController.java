@@ -4,6 +4,10 @@ import com.hostel.laundry.dto.StudentResponse;
 import com.hostel.laundry.entity.Staff;
 import com.hostel.laundry.repository.StaffRepository;
 import com.hostel.laundry.service.StudentService;
+import com.hostel.laundry.service.StudentLoginService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +20,25 @@ import java.util.Map;
 public class AuthController {
 
     private final StudentService studentService;
+    private final StudentLoginService studentLoginService;
     private final StaffRepository staffRepository;
 
-    public AuthController(StudentService studentService, StaffRepository staffRepository) {
+    public AuthController(StudentService studentService, StaffRepository staffRepository, StudentLoginService studentLoginService) {
         this.studentService = studentService;
+        this.studentLoginService = studentLoginService;
         this.staffRepository = staffRepository;
+    }
+
+    public record StudentLoginRequest(@NotBlank @Size(max=40) String registrationNumber,
+                                      @NotBlank @Size(max=72) String password) {}
+
+    @PostMapping("/student-login")
+    public ResponseEntity<?> loginStudent(@Valid @RequestBody StudentLoginRequest request) {
+        var student = studentLoginService.login(request.registrationNumber(), request.password());
+        if (student.isEmpty()) {
+            return ResponseEntity.status(401).body(Map.of("message", "Incorrect registration number or password."));
+        }
+        return ResponseEntity.ok(student.get());
     }
 
     @GetMapping("/users")

@@ -1,3 +1,31 @@
+# LaundryHub Team Project
+
+Hostel laundry order management application adapted and run locally for the Full Stack Web Development course.
+
+## Team
+
+| Student | Registration number |
+| --- | --- |
+| Sri Karthikeya | RA2311003011798 |
+| K Revanth Aditya | RA23113011922 |
+| Y Srinivas | RA2311003011633 |
+
+## Run this version
+
+Follow [the Mac and VS Code instructions](RUN-MAC.md). Open `http://localhost:3000/login` after starting both services.
+
+Personal demo student: `RA2311003011798` with password `WashWise@123`. The password is for the local academic demo. Staff account switching remains a demonstration feature; the inherited APIs do not provide production authorization.
+
+Local additions include the personalized student login with backend BCrypt verification, explicit profile selection, student loading guards, Maven Wrapper, VS Code run tasks, dependency-lockfile repair, and project documentation.
+
+[Project report](docs/LaundryHub_Project_Report.pdf)
+
+## Source acknowledgement
+
+The base application and its original history are from [tejaskm-dev/laundary](https://github.com/tejaskm-dev/laundary). The original project documentation follows below. Its demo-login description is superseded by the instructions above for the personalized student account.
+
+---
+
 # Hostel Laundry Management System (HLMS)
 
 A full-stack web application designed for hostel laundry operations, evolved from a console-based Java OOP mini project into a decoupled system with a **Java Spring Boot** REST backend, a **MySQL** relational database, and a **Next.js + React + Tailwind CSS** frontend.
